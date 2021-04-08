@@ -3,7 +3,7 @@ import './style.css'
 import * as PIXI from 'pixi.js'
 import * as particles from 'pixi-particles'
 import { Init } from './webgl/init';
-
+window.PIXI = PIXI;
 
 export class MainApp {
 
@@ -12,13 +12,23 @@ export class MainApp {
 	constructor(pixiApp) {
 		this.init = new Init(pixiApp);
 	}
+
+    load(pixiApp, canvas, assets){
+        this.init.init(pixiApp, canvas)
+        this.init.loadGraphics(assets)
+
+        document.addEventListener("graphicsLoaded", () => {
+            this.init.addBackground()
+            this.init.addReels()
+        })
+    }
 }
 
-let stage, renderer
+let pixiApp, renderer
 
 document.addEventListener("DOMContentLoaded", () => {
 	let canvas = document.getElementById("gameCanvas");
-	const pixiApp = new PIXI.Application();
+	pixiApp = new PIXI.Application();
 	canvas.appendChild(pixiApp.view);
 
 	renderer = new PIXI.Renderer({
@@ -26,19 +36,25 @@ document.addEventListener("DOMContentLoaded", () => {
         width: window.innerWidth,
         height: window.innerHeight,
         resolution: window.devicePixelRatio,
-        autoDensity: true
+        autoDensity: true,
+        resizeTo: window
     });
-    stage = new PIXI.Container();
     const ticker = new PIXI.Ticker();
 
 
     ticker.add(animate);
     ticker.start();
 
-	var app = new MainApp(pixiApp);
+    const graphics = [
+        "assets/symbols.json",
+        "assets/myAssets.json"
+    ]
+
+	let app = new MainApp(pixiApp);
+    app.load(pixiApp, canvas, graphics)
 })
 
 function animate() {
-	renderer.render(stage);
+	renderer.render(pixiApp.stage);
 }
 
