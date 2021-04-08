@@ -49,7 +49,7 @@ export class Init {
         let reelTextures = this.loader.getLoaderManager().resources["assets/symbols.json"].textures
         let uiTextures = this.loader.getLoaderManager().resources["assets/myAssets.json"].textures
         if(reelTextures && uiTextures){
-            reels.initReels(reelTextures, uiTextures["Play.png"])
+            reels.initReels(reelTextures, uiTextures["Play.png"], uiTextures["Quit_Exit.png"])
         }
 
     }

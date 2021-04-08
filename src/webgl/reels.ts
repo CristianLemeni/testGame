@@ -8,7 +8,7 @@ export class Reels {
 
     stage: PIXI.Container
     reelsContainer: PIXI.Container
-    state: string = "normal"
+    state: string = "normalState"
     spinTimeline: gsap.TimelineMax
     reelsJson: any
     ids: any
@@ -30,9 +30,10 @@ export class Reels {
         this.idsDict = {}
     }
 
-    initReels(reelsTextures: any, spinBtnTexture: any){
+    initReels(reelsTextures: any, spinBtnTexture: any, skipBtnTexture: any){
         this.addReels(reelsTextures)
         this.addSpinButton(spinBtnTexture)
+        this.addSkipButton(skipBtnTexture)
     }
 
     addReels(textures: any){
@@ -96,6 +97,22 @@ export class Reels {
         });
     }
 
+    addSkipButton(texture: any){
+        let skipButton = new PIXI.Sprite(texture);
+        skipButton.interactive = true
+        skipButton.scale.set(0.5)
+        skipButton.position.x = this.reelsContainer.children[0].position.x - skipButton.width * 1.5
+        skipButton.position.y = this.reelsContainer.children[0].position.y + skipButton.height/6
+        this.reelsContainer.addChild(skipButton)
+        skipButton.visible = false
+        this.resize()
+
+        skipButton.on("mousedown", function(e: any) {
+            let evt = new Event("skipPressed")
+            document.dispatchEvent(evt)
+        });
+    }
+
     getIconId(arr: any) {
         let parsedArr = arr.split(",")
         let randInt = Math.floor(Math.random() * ((parsedArr.length-1) + 1));
@@ -116,54 +133,101 @@ export class Reels {
         document.addEventListener("spinPressed", () => {
             this.spin()
         })
+
+        document.addEventListener("skipPressed", () => {
+            this.skip()
+        })
+
+        document.addEventListener("specialState", () => {
+            gsap.gsap.globalTimeline.then(() => {
+                this.spinTimeline.duration(1.5)
+                this.spin()
+            })
+        })
+        document.addEventListener("normalState", () => {
+            this.spinTimeline.duration(3)
+        })
     }
 
     changeState(newState: string){
         this.state = newState
+
+        let evt = new Event(this.state)
+        document.dispatchEvent(evt)
     }
 
     spin(){
+        gsap.gsap.globalTimeline.timeScale(1)
         this.spinTimeline.restart()
+        this.reelsContainer.children[this.reelsContainer.children.length - 1].visible = true
     }
 
-    resetArrs(self: Reels){
-        for(let i = 0; i < self.ids.length; i++){
-            self.ids[i] = []
-        }
-        for(let key in self.idsDict){
-            self.idsDict[key] = []
+    skip(){
+        console.log(this.state)
+       if(this.state == "normalState"){
+            gsap.gsap.globalTimeline.timeScale(100)
+       }
+    }
+
+    resetArrs(self: Reels, winTimeline: gsap.TimelineMax){
+        if(!winTimeline.isActive()){
+            for(let i = 0; i < self.ids.length; i++){
+                for(let j = 0; j < self.ids[i].length; j++){
+                    (self.reelsContainer.children[i] as PIXI.Container).children[j].alpha = 1
+                }
+            }
+            for(let i = 0; i < self.ids.length; i++){
+                self.ids[i] = []
+            }
+            for(let key in self.idsDict){
+                self.idsDict[key] = []
+            }
+            self.reelsContainer.children[self.reelsContainer.children.length - 1].visible = false
+            self.changeState("normalState")
         }
     }
 
     checkForWin(self: Reels){
+        console.log("TEST")
         let time = 0
+        let winTimeline = new gsap.TimelineMax({paused: true, autoRemoveChildren:true})
+        for(let i = 0; i < self.ids.length; i++){
+            for(let j = 0; j < self.ids[i].length; j++){
+                (self.reelsContainer.children[i] as PIXI.Container).children[j].alpha = 0.5
+            }
+        }
         for(let key in self.idsDict){
             let unq = new Set(self.idsDict[key])
             if(unq.size > 2){
-                // console.log("WIN", self.idsDict[key])
-                // console.log("ID", key)
-                // console.log("COLS", unq)
-                self.winAnimation(key, unq, self, time)
-                time += 0.6
+                self.winAnimation(key, unq, self, time, winTimeline)
+                time += 0.7
             }
-        } 
-        self.resetArrs(self)   
+        }
+        
+        if(time == 0){
+            self.resetArrs(self, winTimeline)
+        }
     }
 
-    winAnimation(val: any, cols: Set<unknown>, self: Reels, time: number){
-        let winTimeline = new gsap.TimelineMax({paused: true})
+    winAnimation(val: any, cols: Set<unknown>, self: Reels, time: number, winTimeline: gsap.TimelineMax){
+        console.log("TEST2")
         let winArr = []
-        console.log(cols)
         for(let id of cols){
             for(let i = 0; i < self.ids[id as any].length; i++){
                 if(self.ids[id as any][i] == val){
-                    winArr.push({id: val, col: id, row: i})
+                    winArr.push({id: val, col: id, row: i});
+                    (self.reelsContainer.children[id as any] as PIXI.Container).children[i].alpha = 1
                     winTimeline.to((self.reelsContainer.children[id as any] as PIXI.Container).children[i], 0.1, {x:"+=4", yoyo:true, repeat:5}, time);
                     winTimeline.to((self.reelsContainer.children[id as any] as PIXI.Container).children[i], 0.1, {x:"-=4", yoyo:true, repeat:5}, time);
                 }
             }
         }
         winTimeline.play()
+        winTimeline.eventCallback("onComplete", self.resetArrs, [self, winTimeline])  
+        if(val == "1"){
+            console.log("TEST3")
+            self.changeState("specialState")
+        }
         
         
     }
