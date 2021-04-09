@@ -24,7 +24,7 @@ export class Reels {
         this.spinTimeline.eventCallback("onComplete", this.checkForWin,  [this]);
         this.addEvents()
 
-        this.reelsJson = require('C:\\Users\\Cristi\\Documents\\GitHub\\testGame\\public\\assets\\reels.json').reels;
+        this.reelsJson = require('/public/assets/reels.json').reels;
 
         this.ids = []
         this.idsDict = {}
@@ -34,6 +34,11 @@ export class Reels {
         this.addReels(reelsTextures)
         this.addSpinButton(spinBtnTexture)
         this.addSkipButton(skipBtnTexture)
+        let mask = new PIXI.Graphics().beginFill(0xffffff, 1)
+        mask.drawRect(-350, -10, 1000, 350);
+        this.reelsContainer.mask = mask;
+        this.reelsContainer.addChild(mask)
+        this.reelsContainer.setChildIndex(mask, this.reelsContainer.children.length - 3)
     }
 
     addReels(textures: any){
@@ -60,9 +65,9 @@ export class Reels {
                 //@ts-ignore
                 reelCol.filters = [new MotionBlurFilter([1,2], 9)] 
             }, 0)
-            this.spinTimeline.fromTo(reelCol.position, 0.5, {y: reelCol.y}, {y: Init.initialHeight + reelCol.height, ease: "back.inOut(1.7)"}, i*0.15)
+            this.spinTimeline.fromTo(reelCol.position, 0.5, {y: reelCol.y}, {y: reelCol.height * 1.25, ease: "back.inOut(1.7)"}, i*0.15)
             this.spinTimeline.add(() => {
-                reelCol.position.y = - Init.initialHeight
+                reelCol.position.y = - reelCol.height * 1.25
                 for(let r = 0; r < reelCol.children.length; r++){
                     let id = this.getIconId(this.reelsJson[i].reel.icons)
                     this.addID(id, i);
@@ -188,7 +193,6 @@ export class Reels {
     }
 
     checkForWin(self: Reels){
-        console.log("TEST")
         let time = 0
         let winTimeline = new gsap.TimelineMax({paused: true, autoRemoveChildren:true})
         for(let i = 0; i < self.ids.length; i++){
@@ -210,7 +214,6 @@ export class Reels {
     }
 
     winAnimation(val: any, cols: Set<unknown>, self: Reels, time: number, winTimeline: gsap.TimelineMax){
-        console.log("TEST2")
         let winArr = []
         for(let id of cols){
             for(let i = 0; i < self.ids[id as any].length; i++){
@@ -225,7 +228,6 @@ export class Reels {
         winTimeline.play()
         winTimeline.eventCallback("onComplete", self.resetArrs, [self, winTimeline])  
         if(val == "1"){
-            console.log("TEST3")
             self.changeState("specialState")
         }
         
