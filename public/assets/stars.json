@@ -1,0 +1,20 @@
+{"frames": {
+
+"stars.png":
+{
+	"frame": {"x":1,"y":1,"w":1920,"h":962},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":1920,"h":962},
+	"sourceSize": {"w":1920,"h":962}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "stars.png",
+	"format": "RGBA8888",
+	"size": {"w":1922,"h":964},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:09359034ab2f8793062301923f8bf796:c69f4efd18f4ad4c5fb560d2b3eec3f8:35785538339b2ab69d61a4ffdc54ccf7$"
+}
+}

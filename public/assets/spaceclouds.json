@@ -1,0 +1,28 @@
+{"frames": {
+
+"purpleCloud.png":
+{
+	"frame": {"x":1,"y":1,"w":1388,"h":774},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":1388,"h":774},
+	"sourceSize": {"w":1388,"h":774}
+},
+"purpleSmoke.png":
+{
+	"frame": {"x":1,"y":777,"w":1250,"h":1345},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":1250,"h":1345},
+	"sourceSize": {"w":1250,"h":1345}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "spaceclouds.png",
+	"format": "RGBA8888",
+	"size": {"w":1390,"h":2028},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:16985026b581f13420c79b004c64e4d6:2291a08639586516a2dc0ed45e3fcc8b:8e1cdc58b46034cb826c14313189ec01$"
+}
+}

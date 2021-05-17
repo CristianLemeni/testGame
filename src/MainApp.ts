@@ -18,8 +18,7 @@ export class MainApp {
         this.init.loadGraphics(assets)
 
         document.addEventListener("graphicsLoaded", () => {
-            this.init.addBackground()
-            this.init.addReels()
+           this.init.startGame()
         })
     }
 }
@@ -33,11 +32,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	renderer = new PIXI.Renderer({
         view: canvas,
-        width: window.innerWidth,
-        height: window.innerHeight,
+        width: 800,
+        height: 600,
         resolution: window.devicePixelRatio,
         autoDensity: true,
-        resizeTo: window
     });
     const ticker = new PIXI.Ticker();
 
@@ -46,8 +44,12 @@ document.addEventListener("DOMContentLoaded", () => {
     ticker.start();
 
     const graphics = [
-        "assets/symbols.json",
-        "assets/myAssets.json"
+        "assets/spaceclouds.json",
+        "assets/gameAssets.json",
+        "assets/menuBK.json",
+        "assets/stars.json",
+        "assets/fire_explosion.json",
+        "assets/spacebodies.json"
     ]
 
 	let app = new MainApp(pixiApp);
@@ -57,4 +59,5 @@ document.addEventListener("DOMContentLoaded", () => {
 function animate() {
 	renderer.render(pixiApp.stage);
 }
+
 
