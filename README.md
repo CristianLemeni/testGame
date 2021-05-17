@@ -6,7 +6,7 @@ npm run dev to run the project
 
 npm run build to build the project
 
-Player Ship Controls:
+#Player Ship Controls:
 
 press SPACE to shoot
 
