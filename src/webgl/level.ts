@@ -22,7 +22,7 @@ export class Level {
     addLevelBlocks(blockTextures: Array<PIXI.Texture>){
         let x = 500
         let y = 500
-        let spriteNumb = 5
+        let spriteNumb = 144
         for(let i = 0; i < spriteNumb; i++){
             let blockCont = new PIXI.Container()
             let block = PIXI.Sprite.from(blockTextures[Math.floor(Math.random() * blockTextures.length)])
