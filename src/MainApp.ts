@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ticker.start();
 
     const graphics = [
-        "assets/assets.json"
+        "assets/assets2.json"
     ]
 
 	let app = new MainApp(pixiApp);
