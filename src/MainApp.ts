@@ -32,8 +32,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	renderer = new PIXI.Renderer({
         view: canvas,
-        width: 800,
-        height: 600,
+        width: window.innerWidth,
+        height: window.innerHeight,
         resolution: window.devicePixelRatio,
         autoDensity: true,
     });
@@ -44,12 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ticker.start();
 
     const graphics = [
-        "assets/spaceclouds.json",
-        "assets/gameAssets.json",
-        "assets/menuBK.json",
-        "assets/stars.json",
-        "assets/fire_explosion.json",
-        "assets/spacebodies.json"
+        "assets/assets.json"
     ]
 
 	let app = new MainApp(pixiApp);
